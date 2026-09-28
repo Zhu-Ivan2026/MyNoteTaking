@@ -156,6 +156,24 @@ The application is configured for easy deployment with:
 ### Environment Variables
 - `FLASK_ENV`: Set to `development` for debug mode
 - `SECRET_KEY`: Flask secret key for sessions
+- `OPENROUTER_API_KEY`: OpenRouter API key used by the server-side translation endpoint
+
+Create a local `.env` file in the project root and set `OPENROUTER_API_KEY` there. The file is ignored by Git. Do not put the key in frontend code or commit it. Restart the Flask server after changing the key.
+
+Translation instructions are stored in `prompt/translate.txt`. The backend reads this file for each translation request, so you can adjust translation style and formatting rules there without changing the frontend. Notes sent for translation are processed by OpenRouter; do not translate content you are not comfortable sending to that provider.
+
+### Translation API
+- `POST /api/translate` - Translate note text without changing the stored note
+
+Request body:
+```json
+{
+   "text": "Text to translate",
+   "target_language": "zh-CN"
+}
+```
+
+Supported `target_language` values are `zh-CN` (Simplified Chinese) and `zh-TW` (Traditional Chinese). Text is limited to 20,000 characters. A successful response contains `translated_text`; the frontend shows it in a preview, and only the explicit replace action changes the editor (which then follows the existing auto-save behavior).
 
 ### Database Configuration
 - Database file: `src/database/app.db`
